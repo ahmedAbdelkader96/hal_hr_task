@@ -23,7 +23,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
 
   late AnimationController animationController = AnimationController(
     vsync: this,
-    duration: const Duration(seconds: 5),
+    duration: const Duration(seconds: 1),
   );
 
   @override
@@ -35,16 +35,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
 
   void startAnimation(index) async {
     animationController.reset();
-
     await animationController.forward();
-
-    if (slideIndex == 2) {
-      SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
-        Routes.authScreen(context: context);
-      });
-    } else {
-      carouselController.nextPage();
-    }
     setState(() {});
   }
 
@@ -116,6 +107,7 @@ class _OnBoardingScreenState extends State<OnBoardingScreen>
             SizedBox(height: MQuery.getheight(context, 35)),
 
             SkipButton(
+              index: slideIndex,
               animationController: animationController,
               onPressSkip: () {
                 if (slideIndex == 2) {

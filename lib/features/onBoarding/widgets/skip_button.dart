@@ -6,19 +6,36 @@ class SkipButton extends StatefulWidget {
     super.key,
     required this.animationController,
     required this.onPressSkip,
+    required this.index,
   });
 
   final AnimationController animationController;
   final Function() onPressSkip;
+  final int index;
 
   @override
   State<SkipButton> createState() => _SkipButtonState();
 }
 
-class _SkipButtonState extends State<SkipButton>
-    with SingleTickerProviderStateMixin {
+class _SkipButtonState extends State<SkipButton> with TickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+
+  late AnimationController animationController1 = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
+  late AnimationController animationController2 = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
+  late AnimationController animationController3 = AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 1),
+  );
+  late Animation<double> animation1;
+  late Animation<double> animation2;
+  late Animation<double> animation3;
 
   @override
   void initState() {
@@ -33,11 +50,38 @@ class _SkipButtonState extends State<SkipButton>
       begin: 1.0,
       end: 0.9,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
+
+    animation1 = Tween<double>(begin: 0, end: 0.33).animate(
+      CurvedAnimation(parent: animationController1, curve: Curves.easeInOut),
+    );
+
+    animation2 = Tween<double>(begin: 0, end: 0.33).animate(
+      CurvedAnimation(parent: animationController2, curve: Curves.easeInOut),
+    );
+
+    animation3 = Tween<double>(begin: 0, end: 0.33).animate(
+      CurvedAnimation(parent: animationController3, curve: Curves.easeInOut),
+    );
+
+    animationController1.forward();
   }
 
   Future<void> _onPressed() async {
-    await _controller.forward();
-    await _controller.reverse();
+    if (widget.index == 0) {
+      animationController2.forward();
+    } else if (widget.index == 1) {
+      animationController3.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    animationController1.dispose();
+    animationController2.dispose();
+    animationController3.dispose();
+    // TODO: implement dispose
+    super.dispose();
   }
 
   @override
@@ -59,7 +103,9 @@ class _SkipButtonState extends State<SkipButton>
           children: [
             CustomPaint(
               painter: StopWatchCustomPainter(
-                progressAnimation: 1 - widget.animationController.value,
+                progressAnimation:
+                    1 -
+                    (animation1.value + animation2.value + animation3.value),
               ),
               size: Size(h1, h1),
             ),
@@ -85,7 +131,7 @@ class _SkipButtonState extends State<SkipButton>
                   ),
                   child: Center(
                     child: Text(
-                      'Skip',
+                      widget.index == 2 ? 'Skip' : 'Next',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 16,
