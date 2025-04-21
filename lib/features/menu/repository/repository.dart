@@ -7,7 +7,9 @@ class MenuRepository implements IMenuRepository {
   Future<void> signOut() async {
     try {
       await LocalStorageHelper.clearUserMainData();
-      OneSignal.logout();
+      //await OneSignal.logout();
+      await OneSignal.User.removeTag('userId');
+
     } catch (e) {
       rethrow;
     }

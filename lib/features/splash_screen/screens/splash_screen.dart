@@ -1,5 +1,7 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:task/global/methods_helpers_functions/constants.dart';
 import 'package:task/global/methods_helpers_functions/local_storage_helper.dart';
 import 'package:task/global/navigation_routes/routes.dart';
 
@@ -19,7 +21,7 @@ class _SplashPageState extends State<SplashPage> {
       );
       if (!mounted) return;
       if (isAuthenticated == true) {
-        Routes.mainViewScreen(context: context);
+        Routes.mainViewScreen(context: context, isFromRegistration: false, isNew: false,userId:"");
       } else {
         Routes.onBoardingScreen(context: context);
       }
@@ -27,6 +29,9 @@ class _SplashPageState extends State<SplashPage> {
       debugPrint("Error retrieving authentication status: $e");
     }
   }
+
+
+
 
   @override
   Widget build(BuildContext context) {

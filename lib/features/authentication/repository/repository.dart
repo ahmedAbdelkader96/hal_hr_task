@@ -6,12 +6,13 @@ import 'package:http/http.dart' as http;
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:task/features/authentication/models/user_model.dart';
 import 'package:task/features/authentication/repository/irepository.dart';
+import 'package:task/global/methods_helpers_functions/constants.dart';
 
 class AuthRepository implements IAuthRepository {
   @override
   Future<UserModel?> fetchUserData({required String id}) async {
     try {
-      var url = Uri.parse('${dotenv.env['end_point']}/user?id=$id');
+      var url = Uri.parse('${Constants.endPoint}/user?id=$id');
       var res = await http.get(url).timeout(const Duration(seconds: 60));
       var data = jsonDecode(res.body);
       UserModel userModel = UserModel.fromJson(data);
@@ -35,7 +36,7 @@ class AuthRepository implements IAuthRepository {
         "authenticationType": 'email',
       };
 
-      var url = Uri.parse('${dotenv.env['end_point']}/user/signup_email');
+      var url = Uri.parse('${Constants.endPoint}/user/signup_email');
       var res = await http
           .post(url, body: body)
           .timeout(const Duration(seconds: 60));
@@ -53,7 +54,7 @@ class AuthRepository implements IAuthRepository {
   }) async {
     try {
       var body = {"email": email, "password": password};
-      var url = Uri.parse('${dotenv.env['end_point']}/user/login_email');
+      var url = Uri.parse('${Constants.endPoint}/user/login_email');
       var res = await http
           .post(url, body: body)
           .timeout(const Duration(seconds: 60));
@@ -66,9 +67,9 @@ class AuthRepository implements IAuthRepository {
   @override
   Future<http.Response> signWithGoogle() async {
     try {
-      String webClientId = dotenv.env['webClientId'].toString();
+      String webClientId = Constants.webClientId;
 
-      String clientId = dotenv.env['clientId'].toString();
+      String clientId = Constants.clientId;
 
       final GoogleSignIn googleSignIn = GoogleSignIn(
         clientId: clientId,
@@ -83,7 +84,7 @@ class AuthRepository implements IAuthRepository {
           "googleId": googleUser.id,
         };
 
-        var url = Uri.parse('${dotenv.env['end_point']}/user/check_google');
+        var url = Uri.parse('${Constants.endPoint}/user/check_google');
         var res = await http
             .post(url, body: body)
             .timeout(const Duration(seconds: 60));
@@ -101,7 +102,7 @@ class AuthRepository implements IAuthRepository {
   Future<http.Response> renewToken({required String refreshToken}) async {
     try {
       var body = {"refreshToken": refreshToken};
-      var url = Uri.parse('${dotenv.env['end_point']}/user/renew_token');
+      var url = Uri.parse('${Constants.endPoint}/user/renew_token');
       var res = await http
           .post(url, body: body)
           .timeout(const Duration(seconds: 60));
@@ -115,29 +116,28 @@ class AuthRepository implements IAuthRepository {
   Future<void> sendNotification({
     required String title,
     required String body,
+    required String externalId,
   }) async {
-    String? externalId = await OneSignal.User.getExternalId();
-
     var headers = {
       'Content-Type': 'application/json',
-      'Authorization': dotenv.env['oneSignalAuthorization'].toString(),
+      'Authorization': Constants.oneSignalAuthorization,
       'Accept': 'application/json',
     };
     var request = http.Request(
       'POST',
-      Uri.parse(dotenv.env['oneSignalAppEndPoint'].toString()),
+      Uri.parse(Constants.oneSignalAppEndPoint),
     );
     request.body = json.encode({
-      "app_id": dotenv.env['oneSignalAppId'].toString(),
-      "android_template_id": dotenv.env['androidTemplateId'].toString(),
-      "include_aliases": {
-        "external_id": [externalId],
-      },
+      "app_id": Constants.oneSignalAppId,
+      "android_template_id": Constants.androidTemplateId,
+      "filters": [
+        {"field": "tag", "key": "userId", "relation": "=", "value": externalId},
+      ],
       "target_channel": "push",
       "headings": {"en": title},
       "contents": {"en": body},
       "ios_sound": "awesome_sound.wav",
-      "android_channel_id": dotenv.env['android_channel_id'].toString(),
+      "android_channel_id": Constants.androidChannelId,
     });
     request.headers.addAll(headers);
 

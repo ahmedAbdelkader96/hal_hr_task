@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:task/features/authentication/bloc/auth_bloc.dart';
 import 'package:task/features/authentication/controller/controller.dart';
+import 'package:task/global/methods_helpers_functions/Isolates.dart';
 import 'package:task/global/methods_helpers_functions/constants.dart';
 import 'package:task/global/methods_helpers_functions/media_query.dart';
 import 'package:task/global/methods_helpers_functions/toast.dart';
@@ -143,13 +144,12 @@ class _SignUpEmailPassWidgetState extends State<SignUpEmailPassWidget> {
                 seconds: 3,
               );
 
-              AuthController().sendNotification(
-                title: "Congratulations!",
-                body:
-                    "Your account created successfully , welcome to Hal Hr Application",
+              Routes.mainViewScreen(
+                context: context,
+                isFromRegistration: true,
+                isNew: true,
+                userId: state.userId,
               );
-
-              Routes.mainViewScreen(context: context);
             }
           },
           builder: (context, state) {

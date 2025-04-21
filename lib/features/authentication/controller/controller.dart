@@ -32,7 +32,15 @@ class AuthController {
     return repo.renewToken(refreshToken: refreshToken);
   }
 
-  Future<void> sendNotification({required String title, required String body}) {
-    return repo.sendNotification(title: title, body: body);
+  Future<void> sendNotification({
+    required String title,
+    required String body,
+    required String externalId,
+  }) {
+    return repo.sendNotification(
+      title: title,
+      body: body,
+      externalId: externalId,
+    );
   }
 }

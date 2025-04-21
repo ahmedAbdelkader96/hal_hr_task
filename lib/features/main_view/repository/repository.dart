@@ -1,6 +1,6 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:task/features/main_view/repository/irepository.dart';
+import 'package:task/global/methods_helpers_functions/constants.dart';
 import 'package:task/global/methods_helpers_functions/local_storage_helper.dart';
 
 class MainViewRepository implements IMainViewRepository {
@@ -11,7 +11,7 @@ class MainViewRepository implements IMainViewRepository {
 
       var headers = {"Authorization": "Bearer $token"};
       var url = Uri.parse(
-        '${dotenv.env['end_point']}/blogs${query.isNotEmpty ? '?q=$query' : ''}',
+        '${Constants.endPoint}/blogs${query.isNotEmpty ? '?q=$query' : ''}',
       );
       var res = await http
           .get(url, headers: headers)

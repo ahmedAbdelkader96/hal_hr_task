@@ -24,7 +24,8 @@ class ErrorToSignUpWithEmailAndPasswordState extends AuthenticationState {
 }
 
 class DoneToSignUpWithEmailAndPasswordState extends AuthenticationState {
-  const DoneToSignUpWithEmailAndPasswordState();
+  final String userId;
+  const DoneToSignUpWithEmailAndPasswordState({required this.userId});
 
   @override
   List<Object> get props => [];
@@ -36,6 +37,10 @@ class LoadingToSignInWithEmailAndPasswordState extends AuthenticationState {
 }
 
 class DoneToSignInWithEmailAndPasswordState extends AuthenticationState {
+
+  final String userId;
+  const DoneToSignInWithEmailAndPasswordState({required this.userId});
+
   @override
   List<Object> get props => [];
 }
@@ -65,8 +70,8 @@ class ErrorToSignWithGoogleState extends AuthenticationState {
 
 class DoneToSignWithGoogleState extends AuthenticationState {
   final bool isNew;
-
-  const DoneToSignWithGoogleState({required this.isNew});
+  final String userId;
+  const DoneToSignWithGoogleState({required this.isNew,required this.userId});
 
   @override
   List<Object> get props => [];

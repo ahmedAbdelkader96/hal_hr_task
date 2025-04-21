@@ -2,7 +2,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:task/features/authentication/controller/controller.dart';
 import 'package:task/features/authentication/widgets/auth_custom_button.dart';
 import 'package:task/global/methods_helpers_functions/toast.dart';
 import 'package:task/global/navigation_routes/routes.dart';
@@ -30,23 +29,17 @@ class _SignWithGoogleButtonState extends State<SignWithGoogleButton> {
           ToastClass.toast(
             context: context,
             data: "Verified successfully!",
-            seconds: 3,
+            seconds: 2,
           );
 
-          if (state.isNew) {
-            AuthController().sendNotification(
-              title: "Congratulations!",
-              body:
-                  "Your account created successfully , welcome to Hal Hr Application",
-            );
-          } else {
-            AuthController().sendNotification(
-              title: "Welcome Back!",
-              body: "Welcome Back to Hal Hr Application",
-            );
-          }
+          //Isolates.executeSendNotificationInBackground(state.isNew , state.userId);
 
-          Routes.mainViewScreen(context: context);
+          Routes.mainViewScreen(
+            context: context,
+            isFromRegistration: true,
+            isNew: state.isNew,
+            userId: state.userId,
+          );
         }
       },
       builder: (context, state) {

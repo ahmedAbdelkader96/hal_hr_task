@@ -2,26 +2,27 @@
 
 ## Features
 
-1. Splash Page
-    - Animated text for an engaging introduction.
+#Splash Page : Animated text for an engaging introduction.
 
-2. Onboarding
-    - Three onboarding screens featuring Lottie animations and a scan animation.
+#Onboarding : Three onboarding screens featuring Lottie animations and a scan animation.
 
-3. Authentication
-    - Sign in and sign up functionality with email & password, and Google.
-    - OneSignal notifications sent upon registration.
+#Authentication :
+        Sign in and sign up functionality with email & password, and Google.
+        OneSignal notifications sent upon registration.
 
-4. Main View
-    - Bottom navigation bar for easy navigation.
-    - View a list of blogs with search functionality.
+#Main View :
+        Bottom navigation bar for easy navigation.
+        View a list of blogs with search functionality.
 
-5. Refresh Token
-    - A dedicated page for renewing the token if it expires.
+#Refresh Token :
+        A dedicated page for renewing the token if it expires.
 
+#Isolate-based Notifications : 
+        Utilizes isolates to handle notifications efficiently in the background.
 
-- User data is encrypted and decrypted for enhanced security.
-- Uses a `.env` file to secure endpoints and keys.
+#User data is encrypted and decrypted for enhanced security.
+
+#Uses a .env file to secure endpoints and keys.
 
 
 ## Used Packages

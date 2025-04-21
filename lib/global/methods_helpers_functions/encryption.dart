@@ -1,12 +1,13 @@
 import 'package:encrypt/encrypt.dart' as enc;
 import 'package:encrypt/encrypt.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:task/global/methods_helpers_functions/constants.dart';
 
 class EncryptionUtils {
   static IV iv = IV.fromLength(
     16,
   ); // Consider generating a new IV for each encryption
-  static enc.Key key = enc.Key.fromBase64(dotenv.env['encKey']!);
+  static enc.Key key = enc.Key.fromBase64(Constants.encKey);
   static Encrypter encrypter = Encrypter(AES(key));
 
   static String encryptAES(String text) {

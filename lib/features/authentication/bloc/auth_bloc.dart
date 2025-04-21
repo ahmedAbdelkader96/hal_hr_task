@@ -11,6 +11,7 @@ import 'package:task/global/methods_helpers_functions/exception_handlers.dart';
 import 'package:task/global/methods_helpers_functions/local_storage_helper.dart';
 
 part 'auth_event.dart';
+
 part 'auth_state.dart';
 
 class AuthenticationBloc
@@ -27,7 +28,10 @@ class AuthenticationBloc
         emit(LoadingToSignUpWithEmailAndPasswordState());
 
         http.Response res = await controller.signUp(
-            email: event.email, password: event.password, name: event.name);
+          email: event.email,
+          password: event.password,
+          name: event.name,
+        );
         var data = jsonDecode(res.body);
 
         if (res.statusCode == 200) {
@@ -35,16 +39,15 @@ class AuthenticationBloc
           String token = data['token'];
           String refreshToken = data['refreshToken'];
           await LocalStorageHelper.saveUserMainData(
-              userId: userModel.id.toString(),
-              token: token,
-              refreshToken: refreshToken);
+            userId: userModel.id.toString(),
+            token: token,
+            refreshToken: refreshToken,
+          );
 
           final userId = userModel.id.toString();
-          await OneSignal.login(userId);
-          await OneSignal.User.addAlias(userId, userId);
+          await OneSignal.User.addTagWithKey('userId', userId);
 
-
-          emit(DoneToSignUpWithEmailAndPasswordState());
+          emit(DoneToSignUpWithEmailAndPasswordState(userId: userId));
         } else {
           String error = data['message'];
           emit(ErrorToSignUpWithEmailAndPasswordState(message: error));
@@ -60,7 +63,9 @@ class AuthenticationBloc
         emit(LoadingToSignInWithEmailAndPasswordState());
 
         http.Response res = await controller.signInWithEmailAndPassword(
-            email: event.email, password: event.password);
+          email: event.email,
+          password: event.password,
+        );
         var data = jsonDecode(res.body);
 
         if (res.statusCode == 200) {
@@ -69,17 +74,16 @@ class AuthenticationBloc
           String refreshToken = data['refreshToken'];
 
           await LocalStorageHelper.saveUserMainData(
-              userId: userModel.id.toString(),
-              token: token,
-              refreshToken: refreshToken);
+            userId: userModel.id.toString(),
+            token: token,
+            refreshToken: refreshToken,
+          );
 
           final userId = userModel.id.toString();
 
-          await OneSignal.login(userId);
-          await OneSignal.User.addAlias(userId, userId);
+          await OneSignal.User.addTagWithKey('userId', userId);
 
-
-          emit(DoneToSignInWithEmailAndPasswordState());
+          emit(DoneToSignInWithEmailAndPasswordState(userId: userId));
         } else {
           String error = data['message'];
           emit(ErrorToSignInWithEmailAndPasswordState(message: error));
@@ -105,21 +109,20 @@ class AuthenticationBloc
           bool isNew = data['isNew'];
 
           await LocalStorageHelper.saveUserMainData(
-              userId: userModel.id.toString(),
-              token: token,
-              refreshToken: refreshToken);
+            userId: userModel.id.toString(),
+            token: token,
+            refreshToken: refreshToken,
+          );
 
           final userId = userModel.id.toString();
 
-          await OneSignal.login(userId);
-          await OneSignal.User.addAlias(userId, userId);
+          await OneSignal.User.addTagWithKey('userId', userId);
 
-          emit(DoneToSignWithGoogleState(isNew:isNew));
+          emit(DoneToSignWithGoogleState(isNew: isNew, userId: userId));
         } else {
           String error = data['message'];
           emit(ErrorToSignWithGoogleState(message: error));
         }
-
       } catch (error) {
         //String message = ExceptionHandlers.handlePlatformError(error: error);
         emit(ErrorToSignWithGoogleState(message: error.toString()));
@@ -130,8 +133,9 @@ class AuthenticationBloc
       try {
         emit(LoadingToRenewTokenState());
 
-        http.Response res =
-            await controller.renewToken(refreshToken: event.refreshToken);
+        http.Response res = await controller.renewToken(
+          refreshToken: event.refreshToken,
+        );
         var data = jsonDecode(res.body);
 
         if (res.statusCode == 200) {

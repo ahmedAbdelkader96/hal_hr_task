@@ -5,14 +5,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:task/features/splash_screen/screens/splash_screen.dart';
 import 'package:task/global/bloc_providers/bloc_providers.dart';
+import 'package:task/global/methods_helpers_functions/constants.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: "assets/.env");
 
   OneSignal.Debug.setLogLevel(OSLogLevel.verbose);
-  OneSignal.initialize(dotenv.env['oneSignalAppId'].toString());
-  await OneSignal.Notifications.requestPermission(true);
+  OneSignal.initialize(Constants.oneSignalAppId);
+  await OneSignal.Notifications.requestPermission(false);
 
   runApp(const MyApp());
 }

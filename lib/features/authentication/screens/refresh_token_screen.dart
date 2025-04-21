@@ -53,7 +53,12 @@ class _RefreshTokenScreenState extends State<RefreshTokenScreen> {
                 data: "Verified successfully!",
                 seconds: 3,
               );
-              Routes.mainViewScreen(context: context);
+              Routes.mainViewScreen(
+                context: context,
+                isFromRegistration: false,
+                isNew: false,
+                userId: ""
+              );
             });
           }
         },

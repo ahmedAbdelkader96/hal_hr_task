@@ -19,5 +19,9 @@ abstract class IAuthRepository {
 
   Future<http.Response> renewToken({required String refreshToken});
 
-  Future<void> sendNotification({required String title, required String body});
+  Future<void> sendNotification({
+    required String title,
+    required String body,
+    required String externalId,
+  });
 }
